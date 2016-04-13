@@ -7,21 +7,15 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-import java.awt.ScrollPane;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.SystemColor;
-import javax.swing.border.CompoundBorder;
-import java.awt.FlowLayout;
 import javax.swing.ScrollPaneConstants;
 
 public class MainView extends JFrame {
@@ -64,7 +58,6 @@ public class MainView extends JFrame {
 		setContentPane(contentPane);
 		
 		JPanel panel_central = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_central.getLayout();
 		panel_central.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		contentPane.add(panel_central, BorderLayout.CENTER);
 		
@@ -91,6 +84,8 @@ public class MainView extends JFrame {
 		JTextArea textAreaSchedule = new JTextArea();
 		textAreaSchedule.setRows(5);
 		textAreaSchedule.setColumns(35);
+		textAreaSchedule.setWrapStyleWord(true);
+		textAreaSchedule.setLineWrap(true);
 		panel_schedule.add(textAreaSchedule);
 		
 		JScrollPane scrollPane_schedule = new JScrollPane(textAreaSchedule);
@@ -104,6 +99,8 @@ public class MainView extends JFrame {
 		JTextArea textArea_1 = new JTextArea();
 		textArea_1.setRows(12);
 		textArea_1.setColumns(10);
+		textArea_1.setWrapStyleWord(true);
+		textArea_1.setLineWrap(true);
 		panel_3.add(textArea_1);
 		
 		JScrollPane scrollPane = new JScrollPane(textArea_1);		
@@ -117,7 +114,9 @@ public class MainView extends JFrame {
 		JTextArea textAreaEspera = new JTextArea();
 		textAreaEspera.setRows(26);
 		textAreaEspera.setColumns(30);
-		panel_espera.add(textAreaEspera);
+		textAreaEspera.setWrapStyleWord(true);
+		textAreaEspera.setLineWrap(true);
+		panel_espera.add(textAreaEspera);		
 		
 		JScrollPane scrollPane_espera = new JScrollPane(textAreaEspera);
 		scrollPane_espera.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
