@@ -17,18 +17,20 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.SystemColor;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Button;
+import javax.swing.JRadioButton;
 
 public class MainView extends JFrame {
 
 	private JPanel contentPane;
 	private ArrayList<String> nums = new ArrayList<>();
+	JRadioButton rdbtnWaitDie;
+	JRadioButton rdbtnWoundWait;
 
 	/**
 	 * Launch the application.
@@ -67,14 +69,68 @@ public class MainView extends JFrame {
 		JPanel panel_central = new JPanel();
 		panel_central.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		contentPane.add(panel_central, BorderLayout.CENTER);
-		panel_central.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		GridBagLayout gbl_panel_central = new GridBagLayout();
+		gbl_panel_central.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_panel_central.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_central.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_central.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel_central.setLayout(gbl_panel_central);
 		
-		JButton btnInitEscalonameto = new JButton("Iniciar Escalonamento");
-		btnInitEscalonameto.addActionListener(new ActionListener() {
+		JButton btnNewButton = new JButton("New button");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 2;
+		gbc_btnNewButton.gridy = 0;
+		panel_central.add(btnNewButton, gbc_btnNewButton);
+		
+		rdbtnWaitDie = new JRadioButton("Wait-Die");
+		GridBagConstraints gbc_rdbtnWaitDie = new GridBagConstraints();
+		gbc_rdbtnWaitDie.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnWaitDie.gridx = 2;
+		gbc_rdbtnWaitDie.gridy = 2;
+		rdbtnWaitDie.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(rdbtnWoundWait.isSelected()){
+					rdbtnWoundWait.setSelected(false);
+				}
+				
+			}
+		});
+		panel_central.add(rdbtnWaitDie, gbc_rdbtnWaitDie);
+		
+		rdbtnWoundWait = new JRadioButton("Wound-Wait");
+		GridBagConstraints gbc_rdbtnWoundWait = new GridBagConstraints();
+		gbc_rdbtnWoundWait.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnWoundWait.gridx = 3;
+		gbc_rdbtnWoundWait.gridy = 2;
+		rdbtnWoundWait.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(rdbtnWaitDie.isSelected()){
+					rdbtnWaitDie.setSelected(false);
+				}
+				
+			}
+		});
+		panel_central.add(rdbtnWoundWait, gbc_rdbtnWoundWait);
+		
+		JButton btnInitEscalonamento = new JButton("Iniciar Escalonamento");
+		btnInitEscalonamento.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		btnInitEscalonamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		panel_central.add(btnInitEscalonameto);
+		btnInitEscalonamento.setPreferredSize(new Dimension(200, 40));
+		GridBagConstraints gbc_btnInitEscalonamento = new GridBagConstraints();
+		gbc_btnInitEscalonamento.insets = new Insets(0, 0, 0, 5);
+		gbc_btnInitEscalonamento.gridx = 3;
+		gbc_btnInitEscalonamento.gridy = 5;
+		panel_central.add(btnInitEscalonamento, gbc_btnInitEscalonamento);
 		
 		JPanel panel_titulo = new JPanel();
 		panel_titulo.setBackground(SystemColor.textInactiveText);
@@ -167,23 +223,38 @@ public class MainView extends JFrame {
 		panel_espera.setBackground(new Color(211, 211, 211));
 		panel_espera.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		contentPane.add(panel_espera, BorderLayout.EAST);
+		GridBagLayout gbl_panel_espera = new GridBagLayout();
+		gbl_panel_espera.columnWidths = new int[]{0, 0};
+		gbl_panel_espera.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_panel_espera.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_espera.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		panel_espera.setLayout(gbl_panel_espera);
 		
-		JTextArea textAreaEspera = new JTextArea();
-		textAreaEspera.setRows(24);
-		textAreaEspera.setColumns(20);
-		textAreaEspera.setWrapStyleWord(true);
-		textAreaEspera.setLineWrap(true);
-		panel_espera.add(textAreaEspera);		
+		JLabel label = new JLabel("");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(0, 0, 5, 0);
+		gbc_label.gridx = 0;
+		gbc_label.gridy = 0;
+		panel_espera.add(label, gbc_label);
 		
-		JScrollPane scrollPane_espera = new JScrollPane(textAreaEspera);
-		scrollPane_espera.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_espera.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		panel_espera.add(scrollPane_espera);
+		JLabel lblNewLabel_1 = new JLabel("Lista de Espera");
+		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_1.gridx = 0;
+		gbc_lblNewLabel_1.gridy = 1;
+		panel_espera.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		JLabel lblListaEspera = new JLabel("Lista de Espera");
-		lblListaEspera.setBackground(SystemColor.text);
-		lblListaEspera.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		scrollPane_espera.setColumnHeaderView(lblListaEspera);
+		JScrollPane scrollPane_2 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_2 = new GridBagConstraints();
+		gbc_scrollPane_2.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_2.gridx = 0;
+		gbc_scrollPane_2.gridy = 2;
+		panel_espera.add(scrollPane_2, gbc_scrollPane_2);
+		
+		JTextArea textArea_2 = new JTextArea();
+		textArea_2.setColumns(20);
+		scrollPane_2.setViewportView(textArea_2);
 	}
 
 }
