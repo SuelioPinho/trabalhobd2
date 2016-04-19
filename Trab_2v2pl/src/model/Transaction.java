@@ -22,6 +22,10 @@ public class Transaction {
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
 		this.operations = operation;
 	}
+	
+	public void addOperation(Operation operation){
+		operations.add(operation);
+	}
 
 	public int getNumber() {
 		return number;
@@ -51,22 +55,6 @@ public class Transaction {
 
 	public void setOperations(List<Operation> operations) {
 		this.operations = operations;
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return "Transacao T"+getNumber()+", Data de Criacao:"+getCriacaoFMT();
-	}
-	
-	
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Transaction a = new Transaction(1);
-
-		System.out.println(a.getCriacao());
-
 	}
 
 }

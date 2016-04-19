@@ -1,29 +1,33 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.border.BevelBorder;
-import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.SystemColor;
-import javax.swing.ScrollPaneConstants;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
+import controller.TransactionController;
 
 public class MainView extends JFrame {
 
@@ -31,6 +35,7 @@ public class MainView extends JFrame {
 	private ArrayList<String> nums = new ArrayList<>();
 	JRadioButton rdbtnWaitDie;
 	JRadioButton rdbtnWoundWait;
+	TransactionController transactionController = new TransactionController();
 
 	/**
 	 * Launch the application.
@@ -174,6 +179,18 @@ public class MainView extends JFrame {
 		JButton btnAddTransacao = new JButton("Adicionar Transação");
 		btnAddTransacao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				File transaction;
+				try {
+					
+					if((transaction= chooseFile())!=null){
+						transactionController.addTransaction(transaction);
+					}
+					
+					
+				} catch (IOException ioException) {
+					// TODO Auto-generated catch block
+					ioException.printStackTrace();
+				} 
 			}
 		});
 		
@@ -255,6 +272,17 @@ public class MainView extends JFrame {
 		JTextArea textArea_2 = new JTextArea();
 		textArea_2.setColumns(20);
 		scrollPane_2.setViewportView(textArea_2);
+	}
+	
+	public File chooseFile(){
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")+"/git/trabalhobd2/Trab_2v2pl/Transacao"));
+		int result = fileChooser.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		    File selectedFile = fileChooser.getSelectedFile();		    
+		    return selectedFile;
+		}
+		return null;
 	}
 
 }

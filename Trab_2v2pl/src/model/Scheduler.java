@@ -74,9 +74,9 @@ public class Scheduler {
 		// teste
 		List<Transaction> transAll = null;
 		
-		transAll = AllTransaction.loadTransaction();
-		transAll = AllTransaction.loadTransaction();
-		transAll = AllTransaction.loadTransaction();
+//		transAll = AllTransaction.loadTransaction();
+//		transAll = AllTransaction.loadTransaction();
+//		transAll = AllTransaction.loadTransaction();
 
 		List<Operation> oper = getOperRandom(transAll);
 		for (Operation operation : oper) {
