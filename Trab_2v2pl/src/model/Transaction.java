@@ -6,13 +6,15 @@ import java.util.Date;
 import java.util.List;
 
 public class Transaction {
+	private String name;
 	private  long SYSYEM_TIME = System.currentTimeMillis();
 	private int number;
 	private Date criacao;
 	private List<Operation> operations;
 
-	public Transaction(int number) {
+	public Transaction(int number, String name) {
 		this.number = number;
+		this.name = name;
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
 		this.operations = new ArrayList<Operation>();
 	}
@@ -21,6 +23,14 @@ public class Transaction {
 		this.number = number;
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
 		this.operations = operation;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public void addOperation(Operation operation){

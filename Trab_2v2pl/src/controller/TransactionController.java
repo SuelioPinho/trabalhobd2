@@ -35,7 +35,7 @@ public class TransactionController {
 		
 		BufferedReader reader = new BufferedReader(fileReader);
 		
-		Transaction transaction = new Transaction(file.getName().charAt(1));
+		Transaction transaction = new Transaction(file.getName().charAt(1), "Transacao " + file.getName().charAt(1));
 		
 		String line;
 		

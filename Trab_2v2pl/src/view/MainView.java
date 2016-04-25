@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -27,15 +28,24 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import org.omg.IOP.TransactionService;
+
 import controller.TransactionController;
+import controller.WaitForController;
+import model.Transaction;
 
 public class MainView extends JFrame {
 
-	private JPanel contentPane;
-	private ArrayList<String> nums = new ArrayList<>();
+	JPanel contentPane;
+	ArrayList<String> nums = new ArrayList<>();
 	JRadioButton rdbtnWaitDie;
 	JRadioButton rdbtnWoundWait;
+	JRadioButton rdbtnWaitFor;
+	JTextArea transacaoTextArea;
+	JTextArea textAreaSchedule;
+	JTextArea textAreaEspera;
 	TransactionController transactionController = new TransactionController();
+	WaitForController waitForController;
 
 	/**
 	 * Launch the application.
@@ -76,17 +86,28 @@ public class MainView extends JFrame {
 		contentPane.add(panel_central, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_central = new GridBagLayout();
 		gbl_panel_central.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_central.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_central.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_central.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_central.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_central.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		panel_central.setLayout(gbl_panel_central);
 		
-		JButton btnNewButton = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 2;
-		gbc_btnNewButton.gridy = 0;
-		panel_central.add(btnNewButton, gbc_btnNewButton);
+		rdbtnWaitFor = new JRadioButton("Wait-For");
+		GridBagConstraints gbc_rdbtnWaitFor = new GridBagConstraints();
+		gbc_rdbtnWaitFor.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnWaitFor.gridx = 2;
+		gbc_rdbtnWaitFor.gridy = 1;
+		rdbtnWaitFor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(rdbtnWoundWait.isSelected() || rdbtnWaitDie.isSelected()){
+					rdbtnWoundWait.setSelected(false);
+					rdbtnWaitDie.setSelected(false);
+				}
+			}
+		});
+		panel_central.add(rdbtnWaitFor, gbc_rdbtnWaitFor);
 		
 		rdbtnWaitDie = new JRadioButton("Wait-Die");
 		GridBagConstraints gbc_rdbtnWaitDie = new GridBagConstraints();
@@ -98,8 +119,9 @@ public class MainView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(rdbtnWoundWait.isSelected()){
+				if(rdbtnWoundWait.isSelected() || rdbtnWaitFor.isSelected()){
 					rdbtnWoundWait.setSelected(false);
+					rdbtnWaitFor.setSelected(false);
 				}
 				
 			}
@@ -116,8 +138,9 @@ public class MainView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(rdbtnWaitDie.isSelected()){
+				if(rdbtnWaitDie.isSelected()|| rdbtnWaitFor.isSelected()){
 					rdbtnWaitDie.setSelected(false);
+					rdbtnWaitFor.setSelected(false);
 				}
 				
 			}
@@ -127,12 +150,15 @@ public class MainView extends JFrame {
 		JButton btnInitEscalonamento = new JButton("Iniciar Escalonamento");
 		btnInitEscalonamento.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnInitEscalonamento.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
+				waitForController = new WaitForController(textAreaEspera, textAreaSchedule, transactionController.getAllTransactions());
+				waitForController.start();
+				
 			}
 		});
 		btnInitEscalonamento.setPreferredSize(new Dimension(200, 40));
 		GridBagConstraints gbc_btnInitEscalonamento = new GridBagConstraints();
-		gbc_btnInitEscalonamento.insets = new Insets(0, 0, 0, 5);
+		gbc_btnInitEscalonamento.insets = new Insets(0, 0, 5, 5);
 		gbc_btnInitEscalonamento.gridx = 3;
 		gbc_btnInitEscalonamento.gridy = 5;
 		panel_central.add(btnInitEscalonamento, gbc_btnInitEscalonamento);
@@ -150,7 +176,7 @@ public class MainView extends JFrame {
 		panel_schedule.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		contentPane.add(panel_schedule, BorderLayout.SOUTH);
 		
-		JTextArea textAreaSchedule = new JTextArea();
+		textAreaSchedule = new JTextArea();
 		textAreaSchedule.setRows(5);
 		textAreaSchedule.setColumns(35);
 		textAreaSchedule.setWrapStyleWord(true);
@@ -176,7 +202,7 @@ public class MainView extends JFrame {
 		gbl_panel_esquerdo.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel_esquerdo.setLayout(gbl_panel_esquerdo);
 		
-		JButton btnAddTransacao = new JButton("Adicionar Transação");
+		JButton btnAddTransacao = new JButton(new String("Adicionar Transação".getBytes(),Charset.forName("UTF-8")));
 		btnAddTransacao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				File transaction;
@@ -184,8 +210,12 @@ public class MainView extends JFrame {
 					
 					if((transaction= chooseFile())!=null){
 						transactionController.addTransaction(transaction);
+					}					
+					transacaoTextArea.setText("");
+					for (Transaction transacao : transactionController.getAllTransactions()) {
+						transacaoTextArea.append("                 " + transacao.getName() + "\n\n");
+
 					}
-					
 					
 				} catch (IOException ioException) {
 					// TODO Auto-generated catch block
@@ -215,9 +245,10 @@ public class MainView extends JFrame {
 		gbc_scrollPane.gridy = 2;
 		panel_esquerdo.add(scrollPane, gbc_scrollPane);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setColumns(20);
-		scrollPane.setViewportView(textArea);
+		transacaoTextArea = new JTextArea();
+		transacaoTextArea.setColumns(20);
+		transacaoTextArea.setAlignmentX(CENTER_ALIGNMENT);
+		scrollPane.setViewportView(transacaoTextArea);
 		
 		JButton btnNewButton_1 = new JButton("New button");
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -262,16 +293,16 @@ public class MainView extends JFrame {
 		gbc_lblNewLabel_1.gridy = 1;
 		panel_espera.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_2 = new GridBagConstraints();
-		gbc_scrollPane_2.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_2.gridx = 0;
-		gbc_scrollPane_2.gridy = 2;
-		panel_espera.add(scrollPane_2, gbc_scrollPane_2);
+		JScrollPane scrollPane_espera = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_espera = new GridBagConstraints();
+		gbc_scrollPane_espera.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_espera.gridx = 0;
+		gbc_scrollPane_espera.gridy = 2;
+		panel_espera.add(scrollPane_espera, gbc_scrollPane_espera);
 		
-		JTextArea textArea_2 = new JTextArea();
-		textArea_2.setColumns(20);
-		scrollPane_2.setViewportView(textArea_2);
+		textAreaEspera = new JTextArea();
+		textAreaEspera.setColumns(20);
+		scrollPane_espera.setViewportView(textAreaEspera);
 	}
 	
 	public File chooseFile(){
