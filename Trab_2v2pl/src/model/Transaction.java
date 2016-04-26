@@ -1,25 +1,25 @@
 package model;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
+
 
 public class Transaction {
 	private String name;
 	private  long SYSYEM_TIME = System.currentTimeMillis();
 	private int number;
-	private Date criacao;
-	private List<Operation> operations;
+	private Date criacao;	
+	private LinkedList<Operation> operations;
 
 	public Transaction(int number, String name) {
 		this.number = number;
 		this.name = name;
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
-		this.operations = new ArrayList<Operation>();
+		this.operations = new LinkedList<Operation>();
 	}
 	
-	public Transaction(int number,List<Operation> operation) {
+	public Transaction(int number,LinkedList<Operation> operation) {
 		this.number = number;
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
 		this.operations = operation;
@@ -59,12 +59,12 @@ public class Transaction {
 		this.criacao = criacao;
 	}
 
-	public List<Operation> getOperations() {
+	public LinkedList<Operation> getOperations() {
 		return operations;
 	}
 
-	public void setOperations(List<Operation> operations) {
+	public void setOperations(LinkedList<Operation> operations) {
 		this.operations = operations;
-	}
+	}	
 
 }

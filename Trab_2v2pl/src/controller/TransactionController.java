@@ -41,7 +41,7 @@ public class TransactionController {
 		
 		while((line = reader.readLine()) != null){
 			
-			transaction.addOperation(new Operation(line));
+			transaction.addOperation(new Operation(line, transaction.getNumber()));
 			
 		}
 		
