@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 import model.Operation;
 import model.Transaction;
 
-public class WaitForController {
+public class DeteccaoController {
 	
 	private JTextArea waitArea;
 	private JTextArea schedule;
@@ -16,7 +16,7 @@ public class WaitForController {
 	private LinkedList<Operation> waitList;
 	private int count;
 	
-	public WaitForController(JTextArea waitArea, JTextArea schedule, List<Transaction> transactions) {
+	public DeteccaoController(JTextArea waitArea, JTextArea schedule, List<Transaction> transactions) {
 		this.waitArea = waitArea;
 		this.schedule = schedule;
 		this.transactions = transactions;

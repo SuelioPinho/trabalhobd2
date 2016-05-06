@@ -1,29 +1,37 @@
 package model;
 
 public class Operation {
+
+	String type;
+	String account;
+	int id_transaction;
 	
-	private String operationType;
-	private int id_transaction;
+	public Operation(String operation, int id_transaction) {		
+		splitOperation(operation);
+		this.id_transaction = id_transaction;
+	}
 	
-	public Operation(String operationType, int id_transaction) {		
-		this.operationType = operationType;
-		this.id_transaction = id_transaction;
-	}	
+	private void splitOperation(String operation){
+		switch (operation.charAt(0)) {
+		case 'r':
+			this.type = "Read";
+			this.account = operation.charAt(2) + "";
+			break;
 
-	public String getOperationType() {
-		return operationType;
+		case 'w':
+			this.type = "Write";
+			this.account = operation.charAt(2) + "";			
+			break;
+			
+		case 'u':
+			this.type = "Update";
+			this.account = operation.charAt(2) + "";			
+			break;
+		
+		case 'c':
+			this.type = "Commit";
+			break;
+		}
 	}
-
-	public void setOperationType(String operationType) {
-		this.operationType = operationType;
-	}
-
-	public int getId_transaction() {
-		return id_transaction;
-	}
-
-	public void setId_transaction(int id_transaction) {
-		this.id_transaction = id_transaction;
-	}	
 
 }
