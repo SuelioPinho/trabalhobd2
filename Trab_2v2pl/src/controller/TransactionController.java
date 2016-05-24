@@ -35,15 +35,17 @@ public class TransactionController {
 		
 		BufferedReader reader = new BufferedReader(fileReader);
 		
-		Transaction transaction = new Transaction(file.getName().charAt(1), "Transacao " + file.getName().charAt(1));
+		int id = Integer.parseInt(file.getName().charAt(1) + "");
+		
+		Transaction transaction = new Transaction(id, "Transacao " + file.getName().charAt(1));
 		
 		String line;
 		
-		while((line = reader.readLine()) != null){
+		while((line = reader.readLine()) != null){			
 			
 			transaction.addOperation(new Operation(line, transaction.getNumber()));
 			
-		}
+		}	
 		
 		return transaction;
 	}

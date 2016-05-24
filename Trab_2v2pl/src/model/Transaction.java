@@ -9,13 +9,15 @@ public class Transaction {
 	private String name;
 	private  long SYSYEM_TIME = System.currentTimeMillis();
 	private int number;
-	private Date criacao;	
+	private Date criacao;
+	private boolean wait;
 	private LinkedList<Operation> operations;
 
 	public Transaction(int number, String name) {
 		this.number = number;
 		this.name = name;
 		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
+		this.wait = false;
 		this.operations = new LinkedList<Operation>();
 	}
 	
@@ -65,6 +67,14 @@ public class Transaction {
 
 	public void setOperations(LinkedList<Operation> operations) {
 		this.operations = operations;
+	}
+
+	public boolean isWait() {
+		return wait;
+	}
+
+	public void setWait(boolean wait) {
+		this.wait = wait;
 	}	
 
 }

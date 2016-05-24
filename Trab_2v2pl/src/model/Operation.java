@@ -2,9 +2,9 @@ package model;
 
 public class Operation {
 
-	String type;
-	String account;
-	int id_transaction;
+	private String type;
+	private String account;
+	private int id_transaction;
 	
 	public Operation(String operation, int id_transaction) {		
 		splitOperation(operation);
@@ -12,26 +12,52 @@ public class Operation {
 	}
 	
 	private void splitOperation(String operation){
+		
 		switch (operation.charAt(0)) {
 		case 'r':
-			this.type = "Read";
+			this.type = "read";
 			this.account = operation.charAt(2) + "";
 			break;
 
 		case 'w':
-			this.type = "Write";
+			this.type = "write";
 			this.account = operation.charAt(2) + "";			
 			break;
 			
 		case 'u':
-			this.type = "Update";
+			this.type = "update";
 			this.account = operation.charAt(2) + "";			
 			break;
 		
 		case 'c':
-			this.type = "Commit";
+			this.type = "commit";
+			this.account = "";
 			break;
 		}
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public int getId_transaction() {
+		return id_transaction;
+	}
+
+	public void setId_transaction(int id_transaction) {
+		this.id_transaction = id_transaction;
 	}
 
 }

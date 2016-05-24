@@ -1,1 +1,9 @@
-r(x);r(z);r(y);w(z);w(z);r(y);r(y);r(x);c;
+r(x);
+r(z);
+r(y);
+w(z);
+w(z);
+r(y);
+r(y);
+r(x);
+c;

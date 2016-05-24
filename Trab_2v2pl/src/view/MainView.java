@@ -92,7 +92,7 @@ public class MainView extends JFrame {
 		gbl_panel_central.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		panel_central.setLayout(gbl_panel_central);
 		
-		rdbtnWaitFor = new JRadioButton("Wait-For");
+		rdbtnWaitFor = new JRadioButton("Detecção");
 		GridBagConstraints gbc_rdbtnWaitFor = new GridBagConstraints();
 		gbc_rdbtnWaitFor.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnWaitFor.gridx = 2;
@@ -251,12 +251,13 @@ public class MainView extends JFrame {
 		transacaoTextArea.setAlignmentX(CENTER_ALIGNMENT);
 		scrollPane.setViewportView(transacaoTextArea);
 		
-		JButton btnNewButton_1 = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_1.gridx = 0;
-		gbc_btnNewButton_1.gridy = 3;
-		panel_esquerdo.add(btnNewButton_1, gbc_btnNewButton_1);
+		JLabel lblGrafoWaitfor = new JLabel("Grafo Wait-For");
+		lblGrafoWaitfor.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		GridBagConstraints gbc_lblGrafoWaitfor = new GridBagConstraints();
+		gbc_lblGrafoWaitfor.insets = new Insets(0, 0, 5, 0);
+		gbc_lblGrafoWaitfor.gridx = 0;
+		gbc_lblGrafoWaitfor.gridy = 3;
+		panel_esquerdo.add(lblGrafoWaitfor, gbc_lblGrafoWaitfor);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
