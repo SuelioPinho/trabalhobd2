@@ -14,9 +14,10 @@ public class DeteccaoController {
 	private JTextArea schedule;
 	private List<Transaction> transactions;
 	private LinkedList<Operation> waitList;
+	private LinkedList<Transaction> grafoWaitFor;
 	private int count;
 	
-	public DeteccaoController(JTextArea waitArea, JTextArea schedule, List<Transaction> transactions) {
+	public DeteccaoController(JTextArea waitArea, JTextArea waitFor, JTextArea schedule, List<Transaction> transactions) {
 		this.waitArea = waitArea;
 		this.schedule = schedule;
 		this.transactions = transactions;

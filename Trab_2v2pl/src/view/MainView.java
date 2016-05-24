@@ -44,6 +44,7 @@ public class MainView extends JFrame {
 	JTextArea transacaoTextArea;
 	JTextArea textAreaSchedule;
 	JTextArea textAreaEspera;
+	JTextArea textAreaWaitFor;
 	TransactionController transactionController = new TransactionController();
 	DeteccaoController waitForController;
 
@@ -151,7 +152,7 @@ public class MainView extends JFrame {
 		btnInitEscalonamento.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnInitEscalonamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
-				waitForController = new DeteccaoController(textAreaEspera, textAreaSchedule, transactionController.getAllTransactions());
+				waitForController = new DeteccaoController(textAreaEspera, textAreaWaitFor, textAreaSchedule, transactionController.getAllTransactions());
 				waitForController.start();
 				
 			}
@@ -264,8 +265,8 @@ public class MainView extends JFrame {
 		gbc_scrollPane_1.gridy = 4;
 		panel_esquerdo.add(scrollPane_1, gbc_scrollPane_1);
 		
-		JTextArea textArea_1 = new JTextArea();
-		scrollPane_1.setViewportView(textArea_1);
+		textAreaWaitFor = new JTextArea();
+		scrollPane_1.setViewportView(textAreaWaitFor);
 		
 		JPanel panel_espera = new JPanel();
 		panel_espera.setBackground(new Color(211, 211, 211));
