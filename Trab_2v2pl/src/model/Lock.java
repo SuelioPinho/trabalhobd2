@@ -1,12 +1,12 @@
 package model;
 
-public class Block {
+public class Lock {
 	
 	Transaction transaction;
 	String type;
 	String account;
 	
-	public Block(Transaction transaction, String type, String account) {
+	public Lock(Transaction transaction, String type, String account) {
 		this.transaction = transaction;
 		this.type = type;
 		this.account = account;

@@ -1,11 +1,11 @@
 package deadlocks;
 
-public class WaitFor {
+public class Detection {
 	
 	int idTransactionWait;
 	int idTransactionBlock;
 	
-	public WaitFor(int idTransactionWait, int idTransactionBlock) {
+	public Detection(int idTransactionWait, int idTransactionBlock) {
 		this.idTransactionWait = idTransactionWait;
 		this.idTransactionBlock = idTransactionBlock;
 	}

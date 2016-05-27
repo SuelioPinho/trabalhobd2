@@ -31,7 +31,7 @@ import javax.swing.border.EmptyBorder;
 import org.omg.IOP.TransactionService;
 
 import controller.TransactionController;
-import controller.DeteccaoController;
+import controller.Scheduler;
 import model.Transaction;
 
 public class MainView extends JFrame {
@@ -46,7 +46,7 @@ public class MainView extends JFrame {
 	JTextArea textAreaEspera;
 	JTextArea textAreaWaitFor;
 	TransactionController transactionController = new TransactionController();
-	DeteccaoController waitForController;
+	Scheduler waitForController;
 
 	/**
 	 * Launch the application.
@@ -152,7 +152,7 @@ public class MainView extends JFrame {
 		btnInitEscalonamento.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnInitEscalonamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
-				waitForController = new DeteccaoController(textAreaEspera, textAreaWaitFor, textAreaSchedule, transactionController.getAllTransactions());
+				waitForController = new Scheduler(textAreaEspera, textAreaWaitFor, textAreaSchedule, transactionController.getAllTransactions());
 				waitForController.start();
 				
 			}
