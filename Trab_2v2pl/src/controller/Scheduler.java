@@ -31,37 +31,35 @@ public class Scheduler {
 		this.canSchedule = false;
 	}
 	
-	public void start(){
-		
-		Random escolherTransacao = new Random();		
+	public void start(){				
 		
 		while(!transactions.isEmpty()){
 			
-			int idTransaction = 0;
-			
-			if(transactions.size() > 1){
-				
-				idTransaction = escolherTransacao.nextInt(transactions.size() - 1);
-			}			
-			
-			Transaction transaction = transactions.get(idTransaction);
+			Transaction transaction = chooseTransaction();
 			
 			canSchedule = checkLocks(transaction);
 			
-			if(canSchedule){
+			if(canSchedule){				
 				
-				Operation operation = transaction.getOperations().pop();
+				schedule(transaction);			
 				
-				getLock(transaction, operation);
-				
-				schedule(operation);
-				
-				if(transaction.getOperations().isEmpty()){
-					
-					releaseLock(transaction);
-				}		
 			}			
 		}		
+	}
+	
+	private Transaction chooseTransaction(){
+		
+		Random escolherTransacao = new Random();
+		
+		int idTransaction = 0;
+		
+		if(transactions.size() > 1){
+			
+			idTransaction = escolherTransacao.nextInt(transactions.size() - 1);
+		}			
+		
+		return transactions.get(idTransaction);
+		
 	}
 	
 	private Boolean checkLocks(Transaction transaction){
@@ -89,11 +87,18 @@ public class Scheduler {
 		
 	}
 	
-	private void schedule(Operation operation){
+	private void schedule(Transaction transaction){
 		
-		System.out.println("Transacao " +operation.getId_transaction() + " executou operacao " + operation.getType() + "("+operation.getAccount() + ")\n");
+		Operation operation = transaction.getOperations().pop();
+		
+		getLock(transaction, operation);
 		
 		schedule.append("Transacao " +operation.getId_transaction() + " executou operacao " + operation.getType() + "("+operation.getAccount() + ")\n");
+		
+		if(transaction.getOperations().isEmpty()){
+			
+			releaseLock(transaction);
+		}		
 	}
 	
 	private void releaseLock(Transaction transaction){
@@ -131,7 +136,7 @@ public class Scheduler {
 			return false;
 		}
 		
-		if(block.getType().equals("certify lock")){
+		if(block.getType().equals("certify")){
 			
 			putTransationOnWait(transaction);
 			
@@ -140,7 +145,10 @@ public class Scheduler {
 		
 		if(operation.getType().equals("commit")){
 			
-			convertWriteInCertifyLock(operation);
+			if(hasWriteLock(transaction)){
+				
+				convertWriteInCertifyLock(operation);
+			}			
 			
 			return false;
 		}
@@ -150,6 +158,39 @@ public class Scheduler {
 	
 	private void convertWriteInCertifyLock(Operation operation){
 		
+		Transaction transaction = transactions.get(getPositionTransaction(operation));
+		
+		boolean canConvert = true;
+		
+		for (Lock lock : locks) {
+			
+		}
+		
+	}
+	
+	private void tryConvertWrite(Lock writeLock){
+		
+		for(Lock lock : locks){
+			
+			if(lock.getTransaction().getNumber() != writeLock.getTransaction().getNumber()){
+				//if()
+			}
+		}
+	}
+	
+	private boolean hasWriteLock(Transaction transaction){
+		
+		for (Lock lock : locks) {
+			
+			if(lock.getTransaction().getNumber() == transaction.getNumber()){
+				
+				if(lock.getType().equals("write")){					
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	private void getLock(Transaction transaction, Operation operation){
