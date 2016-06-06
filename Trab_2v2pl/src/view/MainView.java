@@ -40,13 +40,16 @@ public class MainView extends JFrame {
 	ArrayList<String> nums = new ArrayList<>();
 	JRadioButton rdbtnWaitDie;
 	JRadioButton rdbtnWoundWait;
-	JRadioButton rdbtnWaitFor;
+	JRadioButton rdbtnDetection;
 	JTextArea transacaoTextArea;
 	JTextArea textAreaSchedule;
 	JTextArea textAreaEspera;
 	JTextArea textAreaWaitFor;
 	TransactionController transactionController = new TransactionController();
 	Scheduler waitForController;
+	static final int DETECTION = 0;
+	static final int WAITDIE = 1;
+	static final int WOUNDWAIT = 2;
 
 	/**
 	 * Launch the application.
@@ -92,12 +95,13 @@ public class MainView extends JFrame {
 		gbl_panel_central.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		panel_central.setLayout(gbl_panel_central);
 		
-		rdbtnWaitFor = new JRadioButton("Detecção");
+		rdbtnDetection = new JRadioButton("Detecção");
 		GridBagConstraints gbc_rdbtnWaitFor = new GridBagConstraints();
 		gbc_rdbtnWaitFor.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnWaitFor.gridx = 2;
 		gbc_rdbtnWaitFor.gridy = 1;
-		rdbtnWaitFor.addActionListener(new ActionListener() {
+		rdbtnDetection.setSelected(true);
+		rdbtnDetection.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -108,7 +112,7 @@ public class MainView extends JFrame {
 				}
 			}
 		});
-		panel_central.add(rdbtnWaitFor, gbc_rdbtnWaitFor);
+		panel_central.add(rdbtnDetection, gbc_rdbtnWaitFor);
 		
 		rdbtnWaitDie = new JRadioButton("Wait-Die");
 		GridBagConstraints gbc_rdbtnWaitDie = new GridBagConstraints();
@@ -120,9 +124,9 @@ public class MainView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(rdbtnWoundWait.isSelected() || rdbtnWaitFor.isSelected()){
+				if(rdbtnWoundWait.isSelected() || rdbtnDetection.isSelected()){
 					rdbtnWoundWait.setSelected(false);
-					rdbtnWaitFor.setSelected(false);
+					rdbtnDetection.setSelected(false);
 				}
 				
 			}
@@ -139,9 +143,9 @@ public class MainView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(rdbtnWaitDie.isSelected()|| rdbtnWaitFor.isSelected()){
+				if(rdbtnWaitDie.isSelected()|| rdbtnDetection.isSelected()){
 					rdbtnWaitDie.setSelected(false);
-					rdbtnWaitFor.setSelected(false);
+					rdbtnDetection.setSelected(false);
 				}
 				
 			}
@@ -152,7 +156,7 @@ public class MainView extends JFrame {
 		btnInitEscalonamento.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnInitEscalonamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
-				waitForController = new Scheduler(textAreaEspera, textAreaWaitFor, textAreaSchedule, transactionController.getAllTransactions());
+				waitForController = new Scheduler(textAreaEspera, textAreaWaitFor, textAreaSchedule, transactionController.getAllTransactions(), getAlgoritmoDeadLock());
 				waitForController.start();
 				
 			}
@@ -316,6 +320,19 @@ public class MainView extends JFrame {
 		    return selectedFile;
 		}
 		return null;
+	}
+	
+	public Integer getAlgoritmoDeadLock(){
+		
+		if(rdbtnWaitDie.isSelected()){
+			return 1;
+		}
+		
+		if(rdbtnWoundWait.isSelected()){
+			return 2;
+		}
+		
+		return 0;
 	}
 
 }

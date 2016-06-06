@@ -23,11 +23,6 @@ public class Operation {
 			this.type = "write";
 			this.account = operation.charAt(2) + "";			
 			break;
-			
-		case 'u':
-			this.type = "update";
-			this.account = operation.charAt(2) + "";			
-			break;
 		
 		case 'c':
 			this.type = "commit";
