@@ -3,14 +3,16 @@ package controller;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JTextArea;
 
 import deadlocks.Detection;
+import model.Lock;
 import model.Operation;
 import model.Transaction;
 import model.WaitFor;
-import model.Lock;
 
 public class Scheduler {
 	
@@ -42,7 +44,6 @@ public class Scheduler {
 	public void start(){
 				
 		while(!transactions.isEmpty()){
-			
 			Transaction transaction = chooseTransaction();
 			
 			canSchedule = analiseTransaction(transaction);
@@ -51,7 +52,10 @@ public class Scheduler {
 				
 				schedule(transaction);			
 				
-			}			
+			}else{
+				verifyAbort();
+			}
+					
 		}		
 	}
 	
@@ -71,6 +75,12 @@ public class Scheduler {
 	}
 	
 	private Boolean analiseTransaction(Transaction transaction){
+		
+		if(!transaction.isStarted()){
+			
+			transaction.setStarted(true);
+			transaction.setCreateAt();
+		}
 		
 		Operation operation = transaction.getOperations().get(0);
 		
@@ -194,23 +204,26 @@ public class Scheduler {
  	
 	private void putTransationOnWait(Transaction transaction, Lock lock){		
 		
-		Operation operation = transaction.getOperations().get(0);
-		
-		transactions.get(getPositionTransaction(operation.getId_transaction())).setWait(true);
-		
-		System.out.println("Transação " + transaction.getNumber() + " entrou em espera\n");
-		
-		waitArea.append("Transação " + operation.getId_transaction() +" "+ operation.getType()+"("+operation.getAccount()+")\n");
-		System.out.println("Transação " + operation.getId_transaction() +" "+ operation.getType()+"("+operation.getAccount()+")");
-		
-		waitList.add(operation);
-		
-		grafoWaitFor.add(new WaitFor(transaction, lock.getTransaction()));
-		
-		waitForArea.append("Transação" + transaction.getNumber() + " espera por Transação"+lock.getTransaction().getNumber()+"\n");
-		
-		System.out.println("Transação" + transaction.getNumber() + " espera por Transação"+lock.getTransaction().getNumber() );
-		
+		if(!isWaitForLock(transaction, lock)){
+			Operation operation = transaction.getOperations().get(0);
+			
+			transactions.get(getPositionTransaction(operation.getId_transaction())).setWait(true);
+			
+			System.out.println("Transação " + transaction.getNumber() + " entrou em espera\n");
+			
+			waitArea.append("Transação " + operation.getId_transaction() +" "+ operation.getType()+"("+operation.getAccount()+")\n");
+			System.out.println("Transação " + operation.getId_transaction() +" "+ operation.getType()+"("+operation.getAccount()+")\n");
+			
+			waitList.add(operation);
+			
+			grafoWaitFor.add(new WaitFor(transaction, lock.getTransaction()));
+			
+			waitForArea.append("Transação" + transaction.getNumber() + " espera por Transação"+lock.getTransaction().getNumber()+"\n");
+			
+			System.out.println("Transação" + transaction.getNumber() + " espera por Transação"+lock.getTransaction().getNumber()+"\n" );
+			
+			verifyDeadLock(transaction, lock.getTransaction());
+		}
 	}
 
 	private Boolean isCompatible(Lock lock, Operation operation){
@@ -221,14 +234,14 @@ public class Scheduler {
 
 		if(lock.getType().equals("write") && operation.getType().equals("write")){
 			
-			putTransationOnWait(transaction, lock);
+			resolveDeadLock(transaction, lock);
 			
 			return false;
 		}
 		
 		if(lock.getType().equals("certify")){
 			
-			putTransationOnWait(transaction, lock);
+			resolveDeadLock(transaction, lock);
 			
 			return false;
 		}		
@@ -302,4 +315,116 @@ public class Scheduler {
 	
 		return 0;
 	}
+
+	private void verifyDeadLock(Transaction transactionOnWait, Transaction transactionOnLock){
+		
+		for (WaitFor waitFor: grafoWaitFor){
+			
+			if(waitFor.getTransactionOnLock().getNumber() == transactionOnWait.getNumber()
+					&& waitFor.getTransactionInWait().getNumber() == transactionOnLock.getNumber()){
+				
+				detection(transactionOnWait, transactionOnLock);
+				break;
+			}
+			
+		}
+	}
+
+	private void resolveDeadLock(Transaction transaction, Lock lock){
+		
+		switch (algoritmoDeadLock) {
+		
+		case DETECTION:
+			putTransationOnWait(transaction, lock);
+			break;
+
+		case WAITDIE:
+			waitDie(transaction, lock);
+			break;
+		
+		case WOUNDWAIT:
+			woundWait(transaction, lock);
+			break;
+		}
+	}
+	
+	private void detection(Transaction transactionOnWait, Transaction transactionOnLock){
+		
+		System.out.println("Detection ativou");
+		schedule.append("Ocorreu DeadLock\n");
+		
+		if(transactionOnWait.getCreateAt() > transactionOnLock.getCreateAt()){
+			transactions.get(getPositionTransaction(transactionOnWait.getNumber())).setAbort(true);
+		}else {
+			transactions.get(getPositionTransaction(transactionOnLock.getNumber())).setAbort(true);
+		}
+	}
+	
+	private void waitDie(Transaction transactionOnWait, Lock lock){
+		
+		System.out.println("Prevenção WaitDie\n");
+		schedule.append("Prevenção WaitDie\n");
+		
+		if(transactionOnWait.getCreateAt() < lock.getTransaction().getCreateAt()){
+			putTransationOnWait(transactionOnWait, lock);
+		}else {
+			transactions.get(getPositionTransaction(transactionOnWait.getNumber())).setAbort(true);
+		}
+	}
+	
+	private void woundWait(Transaction transactionOnWait, Lock lock){
+		
+		System.out.println("Prevenção WoundWait\n");
+		schedule.append("Prevenção WoundWait\n");
+		
+		if(transactionOnWait.getCreateAt() < lock.getTransaction().getCreateAt()){
+			transactions.get(getPositionTransaction(lock.getTransaction().getNumber())).setAbort(true);
+		}else {
+			putTransationOnWait(transactionOnWait, lock);
+		}
+		
+	}
+	
+	private void abortTransaction(Transaction transaction){
+		System.out.println("Transação " + transaction.getNumber() + " abortou\n");
+		
+		for(int i = 0; i < waitList.size(); i++){
+			
+			if(waitList.get(i).getId_transaction() == transaction.getNumber()){
+				
+				waitList.remove(i);
+				waitArea.append("Transação" + transaction.getNumber() + " saiu\n");
+				i--;
+			}
+		}
+		
+		schedule.append("Transação " + transaction.getNumber() + " foi abortada\n");
+		
+		releaseLock(transaction);
+	}
+	
+	private void verifyAbort(){
+		
+		for(Transaction transaction : transactions){
+			
+			if(transaction.isAbort()){
+				abortTransaction(transaction);
+				break;
+			}
+		}
+	}
+	
+	public boolean isWaitForLock(Transaction transaction, Lock lock){
+		
+		for(WaitFor waitFor: grafoWaitFor){
+			if(waitFor.getTransactionInWait().getNumber() == transaction.getNumber() &&
+					waitFor.getTransactionOnLock().getNumber() == lock.getTransaction().getNumber()){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
 }

@@ -7,23 +7,27 @@ import java.util.LinkedList;
 
 public class Transaction {
 	private String name;
-	private  long SYSYEM_TIME = System.currentTimeMillis();
 	private int number;
-	private Date criacao;
+	private long createAt;
 	private boolean wait;
+	private boolean started;
+	private boolean abort;
 	private LinkedList<Operation> operations;
 
 	public Transaction(int number, String name) {
 		this.number = number;
 		this.name = name;
-		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
 		this.wait = false;
+		this.started = false;
+		this.abort = false;
 		this.operations = new LinkedList<Operation>();
 	}
 	
 	public Transaction(int number,LinkedList<Operation> operation) {
 		this.number = number;
-		this.criacao = new Date(SYSYEM_TIME += 1 * 1000);
+		this.wait = false;
+		this.started = false;
+		this.abort = false;
 		this.operations = operation;
 	}
 	
@@ -45,21 +49,7 @@ public class Transaction {
 
 	public void setNumber(int number) {
 		this.number = number;
-	}
-
-	public Date getCriacao() {
-		return criacao;
-	}
-	
-	public String getCriacaoFMT() {
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		String dataFMT = sdf.format(criacao);
-		return dataFMT;
-	}
-
-	public void setCriacao(Date criacao) {
-		this.criacao = criacao;
-	}
+	}	
 
 	public LinkedList<Operation> getOperations() {
 		return operations;
@@ -75,6 +65,30 @@ public class Transaction {
 
 	public void setWait(boolean wait) {
 		this.wait = wait;
+	}
+
+	public long getCreateAt() {
+		return createAt;
+	}
+
+	public void setCreateAt() {
+		this.createAt = System.currentTimeMillis();
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public void setStarted(boolean started) {
+		this.started = started;
+	}
+
+	public boolean isAbort() {
+		return abort;
+	}
+
+	public void setAbort(boolean abort) {
+		this.abort = abort;
 	}	
 
 }
